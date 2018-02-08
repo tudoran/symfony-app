@@ -1,0 +1,72 @@
+BackOfficeBundle\Entity\ProductHistory:
+    type: entity
+    table: product_history
+    indexes:
+        product_history_product_id_fk:
+            columns:
+                - product_id
+        product_history_modified_by_fk:
+            columns:
+                - modified_by
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        productTotal:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+                default: '0'
+            column: product_total
+        productOperationDescription:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: product_operation_description
+        items:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+                default: '0'
+        deliver:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '0'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+    manyToOne:
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        product:
+            targetEntity: Product
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                product_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

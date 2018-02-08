@@ -1,0 +1,107 @@
+BackOfficeBundle\Entity\Token:
+    type: entity
+    table: token
+    indexes:
+        token_traffic_source_fk:
+            columns:
+                - traffic_source_id
+        token_modified_by_fk:
+            columns:
+                - modified_by
+        token_post_id_fk:
+            columns:
+                - post_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        formData:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: form_data
+        token:
+            type: string
+            nullable: false
+            length: 256
+            options:
+                fixed: false
+                default: ''
+        confirmedBy:
+            type: string
+            nullable: true
+            length: 256
+            options:
+                fixed: false
+            column: confirmed_by
+        ipv4:
+            type: string
+            nullable: false
+            length: 16
+            options:
+                fixed: false
+        email:
+            type: string
+            nullable: false
+            length: 256
+            options:
+                fixed: false
+                default: ''
+        streetAddress:
+            type: string
+            nullable: false
+            length: 256
+            options:
+                fixed: false
+                default: ''
+            column: street_address
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+    manyToOne:
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        post:
+            targetEntity: Post
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                post_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        trafficSource:
+            targetEntity: TrafficSource
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                traffic_source_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

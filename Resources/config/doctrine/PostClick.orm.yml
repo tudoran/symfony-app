@@ -1,0 +1,45 @@
+BackOfficeBundle\Entity\PostClick:
+    type: entity
+    table: post_click
+    indexes:
+        post_id_fk:
+            columns:
+                - post_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        total:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+    manyToOne:
+        post:
+            targetEntity: Post
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                post_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

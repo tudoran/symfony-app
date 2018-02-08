@@ -1,0 +1,36 @@
+BackOfficeBundle\Entity\ProductPurchaseStatus:
+    type: entity
+    table: product_purchase_status
+    id:
+        id:
+            type: smallint
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 45
+            options:
+                fixed: false
+        description:
+            type: string
+            nullable: false
+            length: 45
+            options:
+                fixed: false
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+    lifecycleCallbacks: {  }

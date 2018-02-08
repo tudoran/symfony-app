@@ -1,0 +1,156 @@
+{% extends 'BackOfficeBundle:Default:dashboard_layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumbs clearfix">
+        <li><a href="#">Home</a></li>
+        <li><a href="{{ path('back_office_customer_shipments') }}">Shipments</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    {%  if app.session.flashBag.has('error') %}
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Please review the following error(s):
+            </div>
+            <ul class="list">
+                {% for error in app.session.flashbag.get('error')%}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <!-- error -->
+
+    {#{%  if app.session.flashBag.has('success')%}#}
+    {% if app.request.query.get('status') == 200  %}
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Success
+            </div>
+            <ul class="list">
+                {#{% for success in app.session.flashbag.get('success')%}#}
+                    <li>Stamps.com label has been successfully saved.</li>
+                {#{% endfor %}#}
+            </ul>
+        </div>
+    {% endif %}
+    <!-- success -->
+
+    <div class="inside">
+        <div class="ui cards">
+            <div class="fw card">
+                <div class="content">
+                    <form id="stampsForm" name="stampsForm" action="{{ path('back_office_customer_shipments_generate_label')}}" method="post">
+                        {#<div>#}
+                            {#<div class="ui right floated main menu delete">#}
+                                {#<a class="icon item show-popup" data-content="Delete Vendor ..." data-position="bottom right" href="#" >#}
+                                    {#<i class="trash outline icon"></i>#}
+                                {#</a>#}
+                            {#</div>#}
+
+                            {#<div class="ui primary right floated main menu" data-content="Order">#}
+                                {#<a class="show-popup icon item" data-content="See Vendor Products ..." data-position="bottom left" href="#">#}
+                                    {#<i class="browser outline icon"></i>#}
+                                {#</a>#}
+                            {#</div>#}
+
+                            {#<div class="ui primary right floated main menu" data-content="Order">#}
+                                {#<a class="show-popup icon item" data-content="Track Orders ..." data-position="bottom left" href="#">#}
+                                    {#<i class="shipping outline icon"></i>#}
+                                {#</a>#}
+                            {#</div>#}
+
+                            {#<div class="ui primary right floated main menu" data-content="Order">#}
+                                {#<a class="show-popup icon item" data-content="Create Order ..." data-position="bottom right" href="#">#}
+                                    {#<i class="shop outline icon"></i>#}
+                                {#</a>#}
+                            {#</div>#}
+                        {#</div>#}
+                        <div class="ui field">
+                            <h4 class="ui left floated dividing header">Generate Label</h4>
+                        </div>
+                        {#<div class="field">#}
+                            {#<label>Shipment ID:</label>#}
+                            {#<div class="two fields">#}
+                                {#<div class="field">#}
+                                    {#<div class="field ui labeled input">#}
+                                        {#<div class="ui label">#}
+                                            {#<i class="lock icon"></i>#}
+                                        {#</div>#}
+                                        {#<input name="display_shipment_id" placeholder="########" type="text" value="{{ shipment_id | default('') }}" disabled="disabled">#}
+                                    {#</div>#}
+                                    {#<input name="shipment_id" type="hidden" value="{{ shipment_id | default('')}}"/>#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
+                        <!-- end field -->
+
+                        <div class="field">
+                            <div class="ui fluid search selection dropdown">
+                                <input type="hidden" name="product_vendor_id" value="{{ product_vendor.getId() | default(0) }}">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Select Customer</div>
+                                <div class="menu">
+                                    {% for option in customers() %}
+                                        <div class="item" data-value="{{ option.getId() }}">{{ [option.getLastName(), option.getFirstName(), option.getEmail()] | join(', ') }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if app.request.query.get('status') == 200  %}
+                        <div class="ui card">
+                            <div class="image">
+                                <img src="{{ asset('assets/img/label.png') }}">
+                            </div>
+                            {#<div class="content">#}
+                                {#<a class="header">Kristy</a>#}
+                                {#<div class="meta">#}
+                                    {#<span class="date">Joined in 2013</span>#}
+                                {#</div>#}
+                                {#<div class="description">#}
+                                    {#Kristy is an art director living in New York.#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#<div class="extra content">#}
+                                {#<a>#}
+                                    {#<i class="user icon"></i>#}
+                                    {#22 Friends#}
+                                {#</a>#}
+                            {#</div>#}
+                        </div>
+{% endif %}
+                        <!-- end field -->
+                    </form>
+                </div>
+                <!-- end content -->
+                <div class="extra content">
+                    <div class="ui buttons">
+                        <!-- TODO: @jortiz - create delete button -->
+                        <button class="ui button" onclick="goShipments()">Cancel</button>
+                        <div class="or"></div>
+                        <button class="ui positive button" onclick="submitStamps()">Generate</button>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end cards -->
+    </div>
+    <!-- end inside -->
+
+    <script type="text/javascript">
+        function submitStamps() {
+            document.getElementById('stampsForm').submit();
+        }
+
+        function goShipments(){
+            document.location.href  ='{{ path('back_office_customer_shipments_grid') }}';
+        }
+    </script>
+{% endblock %}

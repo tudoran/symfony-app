@@ -1,0 +1,4 @@
+order_topic:
+  channel: order/channel/
+  handler:
+    callback: 'order.topic' #related to the getName() of your topic

@@ -1,0 +1,141 @@
+{% extends 'BackOfficeBundle:Default:dashboard_layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+
+{% block breadcrumbs %}
+    {% if app.request.pathInfo != '/users/' %}
+        <ul class="breadcrumbs clearfix">
+            <li><a href="{{ path('back_office_users') }}">Create New</a></li>
+            <li><a href="{{ path('back_office_users_grid') }}">All Users</a></li>
+            <li>{{ user_first_name ~ ' ' ~ user_last_name }}</li>
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+    {%  if app.session.flashBag.has('error') %}
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Please review the following error(s):
+            </div>
+            <ul class="list">
+                {% for error in app.session.flashbag.get('error')%}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <!-- error -->
+
+    {#{%  if app.session.flashBag.has('success')%}#}
+    {% if app.request.query.get('status') == 200  %}
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Success
+            </div>
+            <ul class="list">
+                {#{% for success in app.session.flashbag.get('success')%}#}
+                <li>User information has been successfully saved.</li>
+                {#{% endfor %}#}
+            </ul>
+        </div>
+    {% endif %}
+    <!-- success -->
+
+
+    <div class="inside">
+        <div class="ui cards">
+            <div class="fw card">
+                <div class="content">
+                    <div class="ui segment">
+                        <h2 class="ui header">
+                            <i class="users icon"></i>
+                            <div class="content">
+                                Users
+                                <div class="sub header">Enter and save user information</div>
+                            </div>
+                        </h2>
+                    </div>
+
+                    <form class="ui form" id="userForm" action="{{post}}" method="post">
+                        <div class="ui segment">
+                            <div class="field">
+                                <label>User</label>
+                                <div class="three fields">
+
+
+                                    <input type="hidden" name="user_id" value="{{ user_id | default('') }}">
+
+
+                                    <div class="field">
+                                        <input name="user_first_name" placeholder="User First Name" type="text" value="{{ user_first_name | default('')  }}">
+                                    </div>
+
+
+                                    <div class="field">
+                                        <input name="user_last_name" placeholder="User Last Name" type="text" value="{{ user_last_name | default('')  }}">
+                                    </div>
+
+                                    <div class="field">
+                                        <input class="has-non-alpha" name="user_email" placeholder="User email" type="text" value="{{ user_email | default('')  }}">
+                                    </div>
+
+                                    <div class="field">
+                                        <input name="user_password" placeholder="User Password" type="password" value="{{ user_password | default('') }}">
+                                    </div>
+
+                                    <div class="field">
+                                        <input name="retype_user_password" placeholder="Re-type Password" type="password" value="{{ user_password | default('') }}">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- end field -->
+
+                            <div class="field">
+                                <label>User Role</label>
+                                <div class="ui fluid search selection dropdown">
+                                    <input type="hidden" name="user_role_id" value="{{ user_user_role.getId() | default(0)  }}">
+                                    <div class="default text">Select User Role</div>
+                                    <div class="menu">
+                                        {% for option in user_roles() %}
+                                            <div class="item" data-value="{{ option.getId() }}">{{ option.getName() ~ ' - ' ~ option.getDescription() }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end field -->
+                        </div>
+                    </form>
+                </div>
+                <!-- end content -->
+                <div class="extra content">
+                    <div class="ui buttons">
+                        <button class="ui button" onclick="resetUser()">Cancel</button>
+                        <div class="or"></div>
+                        <button class="ui positive button" onclick="submitUser()">Save</button>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end cards -->
+    </div>
+    <!-- end inside -->
+
+    <script type="text/javascript">
+
+        function submitUser() {
+            document.getElementById('userForm').submit();
+        }
+
+        function resetUser() {
+            document.location.href  ='{{ path('back_office_users') }}';
+        }
+    </script>
+
+
+{% endblock %}

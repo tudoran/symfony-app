@@ -1,0 +1,100 @@
+BackOfficeBundle\Entity\ProductPost:
+    type: entity
+    table: view_product_posts
+    id:
+        id:
+            type: string
+            length: 45
+            nullable: false
+    fields:
+        product_id:
+          type: integer
+          nullable: false
+          options:
+              unsigned: false
+          column: product_id
+        vendor_id:
+          type: integer
+          nullable: false
+          options:
+              unsigned: false
+        name:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        description:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        sku:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        vendorLink:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column:
+              vendor_link
+        weight:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+        weightMeasure:
+          type: string
+          nullable: true
+          length: 3
+          options:
+            fixed: true
+          column: weight_measure
+        total:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+        threshold:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        modifiedBy:
+            type: integer
+            nullable: false
+            options:
+              unsigned: false
+            column: modified_by
+        vendor_id:
+            type: integer
+            nullable: false
+            options:
+              unsigned: false
+        link:
+            type: string
+            nullable: false
+            length: 255
+            options:
+              fixed: false
+        postModifiedAt:
+            type: datetime
+            nullable: false
+            column: post_modified_at
+        postModifiedBy:
+            type: integer
+            nullable: false
+            options:
+              unsigned: false
+            column: post_modified_by
+    lifecycleCallbacks: {  }

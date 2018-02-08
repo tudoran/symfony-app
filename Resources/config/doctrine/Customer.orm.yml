@@ -1,0 +1,101 @@
+BackOfficeBundle\Entity\Customer:
+    type: entity
+    table: customer
+    indexes:
+        customer_user_id_fk:
+            columns:
+                - modified_by
+        customer_deleted_by_pk:
+            columns:
+                - deleted_by
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        firstName:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: first_name
+        lastName:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: last_name
+        email:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        birthDay:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_day
+        birthMonth:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_month
+        birthYear:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: birth_year
+        subscribedNewsletter:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '0'
+            column: subscribed_newsletter
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        deletedAt:
+            type: datetime
+            nullable: true
+            column: deleted_at
+    manyToOne:
+        deletedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                deleted_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

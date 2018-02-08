@@ -1,0 +1,48 @@
+{% extends 'BackOfficeBundle:Default:dashboard_layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumbs clearfix">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Vendors</a></li>
+        <li><a href="#">Grid</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    <div class="inside">
+        <div class="ui cards">
+            <div class="fw card">
+                <div class="content">
+                    <table id="vendorTable" class="datatable ui celled table">
+                        <thead>
+                            <tr>
+                                <th>Product Id # :</th>
+                                <th>Product Name :</th>
+                                <th>Product Post URL : </th>
+                                <th>Product Post Total Redeem Times : </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for post in vendor_posts(id) %}
+                        <tr>
+                            <td>{{ post.getProductId()  | default('') }}</td>
+                            <td>{{ post.getName()  | default('') }}</td>
+                            <td>{{ post.getLink() | default('') }}</td>
+                            <td>0</td>
+                        </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end content -->
+
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end cards -->
+
+    </div>
+    <!-- end inside -->
+{% endblock %}

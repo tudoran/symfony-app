@@ -1,0 +1,203 @@
+{% extends 'BackOfficeBundle:Default:dashboard_layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+
+{% block breadcrumbs %}
+    {% if app.request.pathInfo != '/products/' %}
+        <ul class="breadcrumbs clearfix">
+            <li><a href="{{ path('back_office_products') }}">Create New</a></li>
+            <li><a href="{{ path('back_office_products_grid') }}">All Products</a></li>
+            <li>{{ product_name }}</li>
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+    {%  if app.session.flashBag.has('error') %}
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Please review the following error(s):
+            </div>
+            <ul class="list">
+                {% for error in app.session.flashbag.get('error')%}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <!-- error -->
+
+    {#{%  if app.session.flashBag.has('success')%}#}
+    {% if app.request.query.get('status') == 200  %}
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Success
+            </div>
+            <ul class="list">
+                <li>Product information has been successfully saved.&nbsp;<a href="{{ path('back_office_products_grid')}}">See all your products here.</a></li>
+            </ul>
+        </div>
+    {% endif %}
+    <!-- success -->
+
+
+    <div class="inside">
+        <div class="ui cards">
+            <div class="fw card">
+                <div class="content">
+
+                    <div class="ui segment">
+
+                        <h2 class="ui header">
+                            <i class="money icon"></i>
+                            <div class="content">
+                                Product
+                                <div class="sub header">Enter and save product information.</div>
+                            </div>
+                        </h2>
+
+                        <form class="ui form" id="productForm" action="{{ post }}" method="post">
+                            <div class="field">
+                                <div class="four fields">
+
+                                    <div class="field">
+                                        <label>Product Vendor</label>
+
+                                        <div class="ui fluid search selection dropdown">
+                                            <input type="hidden" name="product_vendor_id" value="{{ product_vendor.getId() | default(0) }}">
+                                            <i class="ticket icon"></i>
+                                            <div class="default text">Select Vendor</div>
+                                            <div class="menu">
+                                                {% for option in vendors() %}
+                                                    <div class="item" data-value="{{ option.getId() }}">{{ option.getName() }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Product Name</label>
+                                        <div class="field ui labeled input">
+                                            <div class="ui label">
+                                                <i class="write icon"></i>
+                                            </div>
+                                            <input name="product_name" placeholder="Product Name" type="text" required="required" value="{{ product_name | default('') }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Product SKU [optional]</label>
+                                        <div class="field ui labeled input">
+                                            <div class="ui label">
+                                                <i class="write icon"></i>
+                                            </div>
+                                            <input name="product_sku" placeholder="Product SKU [Optional]" type="text" value="{{ product_sku | default('') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- end field -->
+                            <div class="field">
+                                <div class="four fields">
+                                    <div class="field">
+                                        <label>Product Weight</label>
+                                        <div class="ui left labeled input">
+                                            <input name="product_weight" placeholder="Product Weight" type="number" value="{{ product_weight | default('0.00') }}">
+                                            <div class="ui dropdown label">
+                                                <input type="hidden" name="product_weight_measure" value="{{ product_weight_measure | default('lb.') }}">
+                                                <div class="text">{{ product_weight_measure | default('lb.') }}</div>
+                                                <i class="ui dropdown icon"></i>
+                                                <div class="menu">
+                                                    <div class="item" data-value="lb.">lb.</div>
+                                                    <div class="item" data-value="oz.">oz.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Product Link</label>
+                                        <div class="field ui labeled input">
+                                            <div class="ui label">
+                                                <i class="world icon"></i>
+                                            </div>
+                                            <input class="has-non-alpha" name="product_vendor_link" placeholder="htp://" type="text" value="{{ product_vendor_link | default('') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- end field -->
+                            <div class="field">
+                                <div class="four fields">
+                                    <div class="field">
+                                        <label>Product Stock Total</label>
+                                        <div class="field ui labeled input">
+                                            <div class="ui label">
+                                                <i class="table icon"></i>
+                                            </div>
+                                            <input name="product_total" placeholder="Product Total Stock" required="required" type="number" value="{{ product_total | default(0) }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Product Threshold Stock Alert</label>
+                                        <div class="field ui labeled input">
+                                            <div class="ui label">
+                                                <i class="table icon"></i>
+                                            </div>
+                                            <input name="product_threshold" placeholder="Product Alert Threshold" required="required" type="number" value="{{ product_threshold | default(0) }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- end field -->
+                            <div class="field">
+                                <label>Product Description</label>
+                                <div class="ui field">
+                                    <textarea class="has-non-alpha" name="product_description" placeholder="Product Description and Notes">{{ product_description | default('') }}</textarea>
+                                </div>
+                            </div>
+                            <!-- end field -->
+                        </form>
+                    </div>
+
+                    <div class="extra content">
+                        <div class="ui buttons">
+                            <button class="ui button" onclick="resetProduct()">Cancel</button>
+                            <div class="or"></div>
+                            <button class="ui positive button" onclick="submitProduct()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end cards -->
+    </div>
+    <!-- end inside -->
+
+    <script type="text/javascript">
+
+        /**
+         * Submit to save product information
+         */
+        function submitProduct() {
+            document.getElementById('productForm').submit();
+        }
+
+        /**
+         * Redirect to a clean product form
+         */
+        function resetProduct() {
+            document.location.href  ='{{ path('back_office_products') }}';
+        }
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,65 @@
+BackOfficeBundle\Entity\AccountingProduct:
+    type: entity
+    table: accounting_product
+    indexes:
+        accounting_product_accounting_id_fk:
+            columns:
+                - accounting_id
+        accounting_product_product_id_fk:
+            columns:
+                - product_id
+        accounting_product_user_id_fk:
+            columns:
+                - modified_by
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+    manyToOne:
+        accounting:
+            targetEntity: Accounting
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                accounting_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        product:
+            targetEntity: Product
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                product_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

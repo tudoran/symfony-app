@@ -1,0 +1,106 @@
+BackOfficeBundle\Entity\User:
+    type: entity
+    table: user
+    indexes:
+        user_user_role_id:
+            columns:
+                - user_role_id
+        user_modified_by_user_fk:
+            columns:
+                - modified_by
+        user_deleted_by_pk:
+            columns:
+                - deleted_by
+    uniqueConstraints:
+        user_email_idx:
+            columns:
+                - email
+                - active
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        username:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        email:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        password:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        firstName:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: first_name
+        lastName:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: last_name
+        active:
+            type: smallint
+            nullable: false
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        deletedAt:
+            type: datetime
+            nullable: true
+            column: deleted_at
+    manyToOne:
+        deletedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                deleted_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRole:
+            targetEntity: UserRole
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_role_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

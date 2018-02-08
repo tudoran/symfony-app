@@ -1,0 +1,87 @@
+BackOfficeBundle\Entity\Accounting:
+    type: entity
+    table: accounting
+    indexes:
+        accounting_user_id_fk:
+            columns:
+                - modified_by
+        accounting_deleted_by_pk:
+            columns:
+                - deleted_by
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        fromDate:
+            type: datetime
+            nullable: false
+            column: from_date
+        toDate:
+            type: datetime
+            nullable: false
+            column: to_date
+        occurrence:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+        pricing:
+            type: string
+            nullable: false
+            length: 8
+            options:
+                fixed: false
+        snapshot:
+            type: blob
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        deletedAt:
+            type: datetime
+            nullable: true
+            column: deleted_at
+    manyToOne:
+        deletedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                deleted_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

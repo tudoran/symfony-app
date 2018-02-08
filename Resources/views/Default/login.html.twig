@@ -1,0 +1,73 @@
+{% extends 'BackOfficeBundle:Default:layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+{% block body %}
+
+<style type="text/css">
+  body {
+    background-image: url(../assets/img/bg-login.jpg);
+    background-repeat: no-repeat;
+    background-color: orange;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+  }
+  body > .grid {
+    height: 100%;
+  }
+  .image {
+    margin-top: -100px;
+  }
+  .column {
+    max-width: 450px;
+  }
+</style>
+
+
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui teal image header">
+        <img src="{{ asset('assets/img/logo.png') }}" alt="">
+      </h2>
+      <form id="loginForm" class="ui large form" action="{{ path('login_check') }}" method="post">
+        <div class="ui stacked segment">
+          {% if error %}
+          <div class="ui negative message">
+            <i class="close icon"></i>
+            <div class="header">
+              Error
+            </div>
+              <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+            </div>
+          {% endif %}
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="_email" placeholder="E-mail address" value="{{ last_email }}">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="_password" placeholder="Password">
+            </div>
+          </div>
+          {#<div onclick="doLoginCheck()" class="ui fluid large orange submit button">Login</div>#}
+          <input class="ui fluid orange button" type="submit" value="Login"/>
+        </div>
+
+        <div class="ui error message"></div>
+
+      </form>
+
+    </div>
+  </div>
+
+<script>
+  function doLoginCheck(){
+    document.getElementById('loginForm').submit();
+  }
+</script>
+{% endblock %}
+
+

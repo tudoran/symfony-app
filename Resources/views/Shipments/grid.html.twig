@@ -1,0 +1,305 @@
+{% extends 'BackOfficeBundle:Default:dashboard_layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumbs clearfix">
+        <li><a href="{{ path('back_office_customer_shipments_status_grid', {'status': app.request.get('status')}) }}">Clear Filters</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    {%  if app.session.flashBag.has('error') %}
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Please review the following error(s):
+            </div>
+            <ul class="list">
+                {% for error in app.session.flashbag.get('error')%}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {%  else %}
+        <div class="inside">
+            <div class="ui cards">
+                <div class="fw card">
+                    <div class="content">
+                        <!-- Errors from controller attempting to save data -->
+                        {% if app.request.get('_status') == 500 %}
+                            <div class="ui error message">
+                                <i class="close icon"></i>
+                                <div class="header">
+                                    Please review the following error(s):
+                                </div>
+                                <ul class="list">
+                                {% if app.request.get('upload_error') == 'mime' %}
+                                    <li>An error has occurred while attempting to update our records.</li>
+                                    <li>Invalid file type: Expected CSV</li>
+                                {% elseif app.request.get('upload_error') == 'permission' %}
+                                    <li>Permission denied to read file</li>
+                                    <li>Check the file exists and can be read</li>
+                                {% elseif app.request.get('upload_error') == 'not_detected_upload' %}
+                                    <li>File has not been uploaded</li>
+                                {% else  %}
+                                    <li>An error has occurred while attempting to update our records.</li>
+                                    <li>Error code {{ app.request.get('error') }}</li>
+                                {% endif %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!-- End of errors from controller -->
+
+                        <!-- Success from controller attempting to save data -->
+                        {% if app.request.get('_status') == 200 %}
+                            <div class="ui success message">
+                                <i class="close icon"></i>
+                                <div class="header">
+                                    Success
+                                </div>
+                                <ul class="list">
+                                    <li>Shipment information has been successfully saved.</li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!-- End of success message from controller -->
+
+                        <div class="ui segment">
+
+                            <div style="width: 20%; float:left;">
+                                <h2 class="ui header left aligned">
+                                    <i class="cubes icon"></i>
+                                    <div class="content">
+                                        Orders
+                                        {% if app.request.get('status') | lower == 'media' %}
+                                            <div class="sub header">{{ app.request.get('status') | capitalize }}</div>
+                                        {% else %}
+                                            <div class="sub header">{{ app.request.get('status') | capitalize }} Orders</div>
+                                        {% endif %}
+
+                                    </div>
+                                </h2>
+                            </div>
+
+                            <div class="ui right aligned">
+                                <form id="filterReportForm" name="filterReportForm" action="{{ path('back_office_customer_shipments_status_grid', {'status': app.request.get('status')}) }}" method="get">
+
+                                    <div class="ui right aligned">
+                                        <form id="filterReportForm" name="filterReportForm">
+
+                                            <div id="shipment_filter_product" class="ui search selection dropdown" style="margin:5px;">
+                                                <input type="hidden" name="shipment_filter_product" value="{{ shipment_filter_product | default(0) }}">
+                                                <div class="default text">Select Product</div>
+                                                <div class="menu">
+                                                    {% for option in products() %}
+                                                        <div class="item" data-value="{{ option.getId() }}">{{ option.getName()}}</div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="ui icon input" style="margin:5px;">
+                                                <input id="product_filter_from" value="{{ shipment_filter_from.format('m/d/Y') | default('') }}" name="shipment_filter_from" type="text" placeholder="From..." class="datepicker">
+                                                <i class="table icon"></i>
+                                            </div>
+
+                                            <div class="ui icon input" style="margin:5px;">
+                                                <input id="shipment_filter_to" value="{{ shipment_filter_to.format('m/d/Y')  | default('') }}" name="shipment_filter_to" type="text" placeholder="To..." class="datepicker">
+                                                <i class="table icon"></i>
+                                            </div>
+
+                                            <div class="ui icon input" style="margin:5px;">
+                                                <button type="submit" id="postFilterReportForm" class="circular ui icon button">
+                                                    <i class="icon search"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        <div class="ui right aligned compact negative message hidden">
+                                            <p id="filter-validation-messages"></p>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div class="ui right aligned compact negative message hidden">
+                                    <p id="filter-validation-messages"></p>
+                                </div>
+
+                            </div>
+
+
+                            <div class="ui clearing divider"></div>
+                            <p></p>
+                        </div>
+
+                        <div id="import-stamps-container" class="ui content hidden">
+                            <h4>Import Stamps Tracking Numbers:</h4>
+                            <div class="ui field">
+                                <form id="importStampsForm" name="importStampsForm" method="POST" enctype="multipart/form-data" action="{{ path('back_office_customer_shipments_stamps_import') }}">
+                                    <div class="field">
+                                        <input name="stamps" value="" type="file">
+                                    </div>
+                                    <br/>
+                                </form>
+
+                                <div class="field">
+                                    <div class="ui buttons">
+                                        <button class="ui button" onclick="cancelStamps();">Cancel</button>
+                                        <div class="or"></div>
+                                        <button class="ui positive button" onclick="importStamps();">Submit</button>
+                                    </div>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                            </div>
+
+                        </div>
+
+                        <table id="shipmentTable" class="datatable" width="100%" data-ajax-url="{{ ajax_url }}" data-ajax-all-ids-url="{{ ajax_all_ids_url }}">
+                            <thead>
+                            <tr>
+                                <!-- all tables must follow the select all pattern -->
+                                <th>&nbsp;</th>
+                                <th><input type="checkbox" id="select-all"/></th>
+                                <!-- <th><input type="checkbox" id="select-all"/></th> -->
+                                {% if app.request.get('status', '') != '' and app.request.get('status', '') | lower == 'pending' %}
+                                    <th>Ordered At</th>
+                                    <th>Ordered At (Timestamp)</th>
+                                    <th>Product</th>
+                                    <th>Weight</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Source</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip</th>
+                                    <th>Tracking</th>
+                                {% elseif app.request.get('status', '') != '' and app.request.get('status', '') | lower == 'shipped' %}
+                                    <th>Tracking</th>
+                                    <th>Product</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Source</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip</th>
+                                    <th>Ordered At</th>
+                                    <th>Shipped At</th>
+                                {% elseif app.request.get('status', '') != '' and app.request.get('status', '') | lower == 'media' %}
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Product</th>
+                                    <th>Post ID</th>
+                                    <th>Token</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                    <th>Ordered At</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- end content -->
+
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end cards -->
+
+        </div>
+        <menu id="html5menu" class="ui vertical menu" style="display: none">
+            <menuitem label="Ship selected" onclick="backoffice.shipSelected(document.getElementById('shipmentTable'))"></menuitem>
+            <menuitem label="Archive selected" onclick="backoffice.archiveSelected(document.getElementById('shipmentTable'))"></menuitem>
+        </menu>
+
+        <form id="massShipmentUpdate" name="massShipmentUpdate" action="{{ path('back_office_customer_mass_shipment_status_update') }}" method="post">
+            <input type="hidden" id="updateShipmentsId" name="shipmentsId" value="">
+        </form>
+
+        <form id="exportCSVFromServer" name="exportCSVFromServer" action="{{ path('back_office_customer_export_selected_pending_orders') }}" method="post">
+            <input type="hidden" id="selectedIdsToExport" name="selectedIds" value="">
+        </form>
+
+        <div class="ui modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Modal Title
+            </div>
+            <div class="image content">
+                <div class="image">
+                    An image can appear on left or an icon
+                </div>
+                <div class="description">
+                    A description can appear on the right
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui button">Cancel</div>
+                <div class="ui button">OK</div>
+            </div>
+        </div>
+        <!-- end inside -->
+    {% endif %}
+
+    <!-- archive form -->
+    <form id="_archive" name="_archive" action="{{ path('back_office_customer_shipments_delete') }}" method="post">
+        <input type="hidden" id="_archive_selected_elements" name="_archive_selected_elements" value="">
+    </form>
+    <!-- end archive form -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+        /**
+         *
+         * Cancel and hide stamps import
+         */
+        function cancelStamps(){
+
+            backoffice.cancelStampsImport();
+        }
+
+        /**
+         *
+         * Attempt to import stamps file
+         */
+        function importStamps(){
+
+            backoffice.submitStampsImport();
+        }
+
+        $(document).ready(function() {
+            {% if app.request.get('status', '') != '' and app.request.get('status', '') | lower == 'pending' %}
+                {% if(user_can_write) %}
+                    var table = $('#shipmentTable').DataTable();
+                    table.button().add( 1, {
+                        text: '<i class="download cloud icon"></i>Import CSV from Stamps Pro',
+                        action: function ( e, dt, button, config ) {
+
+                            $('#import-stamps-container').toggle();
+                        }
+                    });
+                {% endif %}
+            {% endif %}
+        });
+
+        $('#filterReportForm').on('submit', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var values = {};
+            $.each($(this).serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
+            window.datatableFilter = values;
+            var table = $('#shipmentTable').DataTable();
+            if (table) {
+               table.ajax.reload();
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,135 @@
+BackOfficeBundle\Entity\Product:
+    type: entity
+    table: product
+    indexes:
+        product_modified_by_user_fk:
+            columns:
+                - modified_by
+        product_vendor_id_fk:
+            columns:
+                - vendor_id
+        product_deleted_by_pk:
+            columns:
+                - deleted_by
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        description:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        sku:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        vendorLink:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: vendor_link
+        unitCost:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            options:
+                default: '0.00'
+            column: unit_cost
+        shippingCost:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+            options:
+                default: '0.00'
+            column: shipping_cost
+        weight:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+        weightMeasure:
+            type: string
+            nullable: true
+            length: 3
+            options:
+                fixed: true
+                default: lb.
+            column: weight_measure
+        total:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+        threshold:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        deletedAt:
+            type: datetime
+            nullable: true
+            column: deleted_at
+    manyToOne:
+        deletedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                deleted_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        vendor:
+            targetEntity: Vendor
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                vendor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

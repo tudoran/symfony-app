@@ -1,0 +1,72 @@
+BackOfficeBundle\Entity\ProductOrder:
+    type: entity
+    table: view_product_order
+    indexes:
+      shipment_product_id_fk:
+        columns:
+        - product_id
+    id:
+      id:
+        type: integer
+        nullable: false
+        options:
+          unsigned: false
+          id: true
+          generator:
+            strategy: IDENTITY
+    fields:
+        productId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            column: product_id
+        shippedAt:
+            type: date
+            nullable: true
+            column: shipped_at
+        year:
+            type: string
+            nullable: true
+            length: 2
+            options:
+                fixed: false
+            column: year
+        month:
+            type: string
+            nullable: true
+            length: 2
+            options:
+                fixed: false
+            column: month
+        week:
+            type: integer
+            nullable: true
+            length: 2
+            options:
+              fixed: false
+            column: week
+        day:
+            type: string
+            nullable: true
+            length: 2
+            options:
+                fixed: false
+            column: day
+        total:
+            type: bigint
+            nullable: true
+            column: total
+    manyToOne:
+        product:
+          targetEntity: Product
+          cascade: {  }
+          fetch: LAZY
+          mappedBy: null
+          inversedBy: null
+          joinColumns:
+            product_id:
+              referencedColumnName: id
+          orphanRemoval: false
+    lifecycleCallbacks: {  }

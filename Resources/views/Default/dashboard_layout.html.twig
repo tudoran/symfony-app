@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}IMA{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ asset('css/semantic.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal.min.css') }}">
+   	<link rel="stylesheet" type="text/css" href="{{ asset('css/icon.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery.contextMenu.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dropdown.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/zeeto.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/zeeto.mobile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fixedColumns.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery.growl.css') }}">
+</head>
+
+<body>
+
+    <div id="main-dashboard">
+      <div id="sidebar">
+        <div class="title">
+          <img src="{{ asset('assets/img/logo.png') }}" alt="">
+          <span>Zeeto</span>
+        </div>
+        <ul>
+          <li>
+            <a class="has-child show-popup" href="#" data-content="Vendor" data-position="right center"><i class="ticket icon"></i><span>Vendor</span></a>
+            <ul>
+                {% if(user_can_write) %}
+                    <li><a class="show-popup" href="{{ path('back_office_vendors') }}" data-content="Create New" data-position="right center"><i class="plus square outline icon icon"></i> <span>Create New</span></a></li>
+                {% endif %}
+              <li><a class="show-popup" href="{{ path("back_office_vendors_grid") }}" data-content="All Vendors" data-position="right center"><i class="browser icon"></i> <span>All Vendors</span></a></li>
+            </ul>
+          </li>
+          <li>
+            <a class="has-child show-popup" href="#" data-content="Products" data-position="right center"><i class="money icon"></i><span>Products</span></a>
+            <ul>
+                {% if(user_can_write) %}
+                    <li><a class="show-popup" href="{{ path('back_office_products') }}" data-content="Create New" data-position="right center"><i class="plus square outline icon icon"></i> <span>Create New</span></a></li>
+                {% endif %}
+              <li><a class="show-popup" href="{{ path("back_office_products_grid") }}" data-content="All Products" data-position="right center"><i class="browser icon"></i> <span>All Products</span></a></li>
+            </ul>
+          </li>
+          <li>
+              <a class="has-child show-popup" href="#" data-content="Inventory" data-position="right center"><i class="edit icon"></i><span>Inventory</span></a>
+              <ul>
+                {% if(user_can_write) %}
+                  <li><a class="show-popup" href="{{ path('back_office_orders') }}" data-content="New Stock" data-position="right center"><i class="plus square outline icon icon"></i> <span>New Stock</span></a></li>
+                  {% endif %}
+                <li><a class="show-popup" href="{{ path('back_office_orders_grid') }}" data-content="All Stock" data-position="right center"><i class="browser icon"></i> <span>All Stocks</span></a></li>
+              </ul>
+          </li>
+          <li>
+              <a class="has-child show-popup" href="#" data-content="Orders" data-position="right center"><i class="cubes icon"></i><span>Orders</span></a>
+              <ul>
+                <li><a class="show-popup" href="{{ path('back_office_customer_shipments_status_grid', {'status': 'Pending'}) }}" data-content="Pending Orders" data-position="right center"><i class="forward mail icon"></i> <span>Pending Orders</span></a></li>
+                  <li><a class="show-popup" href="{{ path('back_office_customer_shipments_status_grid', {'status': 'Shipped'}) }}" data-content="Shipped Orders" data-position="right center"><i class="reply mail icon"></i> <span>Shipped Orders</span></a></li>
+                <li><a class="show-popup" href="{{ path('back_office_customer_shipments_status_grid', {'status': 'Media'}) }}" data-content="Media" data-position="right center"><i class="wifi icon"></i> <span>Media</span></a></li>
+              </ul>
+          </li>
+            <li>
+                <a class="has-child show-popup" href="#" data-content="Accounting" data-position="right center"><i class="dollar icon"></i><span>Accounting</span></a>
+                <ul>
+                    {% if(user_can_write) %}
+                    <li><a class="show-popup" href="{{ path('back_office_accounting') }}" data-content="New Report" data-position="right center"><i class="plus square outline icon icon icon"></i> <span>New Report</span></a></li>
+                    {% endif %}
+                    <li><a class="show-popup" href="{{ path('back_office_accounting_grid') }}" data-content="All Reports" data-position="right center"><i class="browser icon"></i> <span>All Reports</span></a></li>
+                </ul>
+            </li>
+            {% if(user_can_administer) %}
+            <li>
+                <a class="has-child show-popup" href="#" data-content="Users" data-position="right center"><i class="users icon"></i><span>Users</span></a>
+                <ul>
+                    <li><a class="show-popup" href="{{ path('back_office_users') }}" data-content="Create User" data-position="right center"><i class="plus square outline icon icon"></i> <span>Create User</span></a></li>
+                    <li><a class="show-popup" href="{{ path('back_office_users_grid') }}" data-content="All Users" data-position="right center"><i class="browser icon"></i> <span>All Users</span></a></li>
+                </ul>
+            </li>
+            {% endif %}
+        </ul>
+        <a class="set-side" href="#left-sidebar"><i class="chevron left icon"></i></a>
+      </div>
+      <!-- end sidebar -->
+      <div id="content" class="padleft">
+          <div class="ui inline cookie nag bg-orange-semi-transparency fixed">
+              <span class="title"></span>
+              <i class="close icon"></i>
+          </div>
+        <div id="top-nav" class="clearfix">
+          <div class="left-f">
+            <h1><a id="show-sidebar" class="set-sidebar" href="#"><i class="sidebar icon"></i></a>{{ reflection_controller_name | default('') }}</h1>
+          </div>
+          <div class="right-f">
+            <a class="user-data" href="#">Welcome <strong>{{ app.user.getFirstName() ~ ' ' ~ app.user.getLastName()}}</strong></a>
+            <div class="ui icon top right pointing dropdown button">
+              <i class="user icon"></i>
+              <div class="menu">
+                <div class="item" onclick="window.location.href='{{ path('logout') }}'">Logout</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end top-nav -->
+        <div class="content scrolled">
+           <div class="padded">
+              {% block breadcrumbs %}{% endblock %}
+               {% if(error is not defined) %}
+                   {% block content %}{% endblock %}
+               {% else %}
+                   <div class="ui negative message">
+                       <div class="header">
+                           403 Unauthorized
+                       </div>
+                       <p>{{  error  }}</p>
+                   </div>
+
+               {% endif %}
+
+           </div>
+           <!-- end wrapper -->
+        </div>
+      </div>
+      <!-- end content -->
+    </div>
+
+
+
+        <div id="confirm-archive-selected" class="ui basic modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Archive Selected
+            </div>
+            <div class="image content">
+                <div class="image">
+                    <i class="archive icon"></i>
+                </div>
+                <div class="description">
+                    <p>Please confirm you want to proceed to archive your selection.</p>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="two fluid ui inverted buttons">
+                    <div class="ui red basic inverted cancel button">
+                        <i class="remove icon"></i>
+                        No
+                    </div>
+                    <div class="ui green basic inverted approve button">
+                        <i class="checkmark icon"></i>
+                        Yes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirm-shipped-selected" class="ui basic modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Mark Selected Orders as Shipped
+            </div>
+            <div class="image content">
+                <div class="image">
+                    <i class="reply mail icon"></i>
+                </div>
+                <div class="description">
+                    <p>Please confirm you want to proceed to move your orders.</p>
+                    <p>An order confirmation email will be send to selected customers</p>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="two fluid ui inverted buttons">
+                    <div class="ui red basic inverted cancel button">
+                        <i class="remove icon"></i>
+                        No
+                    </div>
+                    <div class="ui green basic inverted approve button">
+                        <i class="checkmark icon"></i>
+                        Yes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% block javascripts %}
+        <script type="text/javascript">
+        var _user = '{{ app.user.getFirstName() ~ ' ' ~ app.user.getLastName()}}';
+        </script>
+
+        <!-- javascripts -->
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script src="{{ asset('js/jquery-ui.js') }}"></script>
+        <script src="{{ asset('js/js.cookie.js') }}"></script>
+        <script src="{{ asset('js/uri.query.js') }}"></script>
+        <script src="{{ asset('js/jquery.ui.position.min.js') }}"></script>
+        <script src="{{ asset('js/semantic.js') }}"></script>
+        <script src="{{ asset('js/zeeto.js') }}"></script>
+        <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('js/dataTables.fixedColumns.min.js') }}"></script>
+        <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+        <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
+        <script src="{{ asset('js/dataTables.select.js') }}"></script>
+        <script src="{{ asset('js/backoffice.js') }}"></script>
+        <script src="{{ asset('js/highlights.js') }}"></script>
+        <script src="{{ asset('js/datatables.js') }}"></script>
+        <script src="{{ asset('js/stocks.js') }}"></script>
+
+        <script type="text/javascript">
+
+            /**
+             * ui events
+             */
+            $(document).ready(function() {
+
+                // pass controller name to data table to apply custom settings per grid
+                var _controller = '{{ reflection_controller_name}}'.toLowerCase();
+
+                // restore tabs highlight
+                // see js/highlights.js
+                window.highlight.restore();
+
+                // all configuration for tables
+                // see js/datatables.js
+                window.datatables.setup(_controller);
+
+                // alternative version for accounting report
+                window.datatables.accSetup();
+
+                // bind events for stock module
+                // see js/stocks.js
+                window.stocks.setup('{{ path('back_office_orders') }}');
+
+                // cancel nonalpha for text inputs application wide
+                $('input:not(.has-non-alpha)').keypress(function(e){
+
+                    if (e.which !== 0 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+
+                        var _char = String.fromCharCode(e.which);
+                        var regx = /^[A-Za-z0-9\._-\s]+$/;
+
+                        if (!regx.test(_char)){
+
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                });
+
+                // date picker
+                $('.datepicker').datepicker();
+
+                {% if(user_can_write) %}
+
+                    window.datatables.enableDelete();
+
+                    {% if(reflection_controller_name == 'Stock') %}
+
+                        window.datatables.enableDeliverStock().enableCreateStock('{{ path('back_office_orders') }}');
+                    {% endif %}
+
+                    {% if(reflection_controller_name == 'Order') %}
+
+                        {% if app.request.get('status', '') != '' and app.request.get('status', '') | lower == 'pending' %}
+
+                        window.datatables.enableShipOrder();
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endif %}
+            });
+        </script>
+    {% endblock %}
+</body>

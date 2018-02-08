@@ -1,0 +1,101 @@
+BackOfficeBundle\Entity\CustomerShippingAddress:
+    type: entity
+    table: customer_shipping_address
+    indexes:
+        customer_shipping_address_customer_id_fk:
+            columns:
+                - customer_id
+        customer_shipping_address_user_id_fk:
+            columns:
+                - modified_by
+        customer_shipping_address_deleted_by_pk:
+            columns:
+                - deleted_by
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        streetAddress:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+            column: street_address
+        zipCode:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false
+            column: zip_code
+        city:
+            type: string
+            nullable: true
+            length: 78
+            options:
+                fixed: false
+        state:
+            type: string
+            nullable: true
+            length: 2
+            options:
+                fixed: true
+        phone:
+            type: string
+            nullable: true
+            length: 25
+            options:
+                fixed: false
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        deletedAt:
+            type: datetime
+            nullable: true
+            column: deleted_at
+    manyToOne:
+        customer:
+            targetEntity: Customer
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                customer_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        deletedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                deleted_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

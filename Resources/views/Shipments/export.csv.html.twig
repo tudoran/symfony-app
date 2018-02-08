@@ -1,0 +1,4 @@
+"Ordered At","Ordered At (Timestamp)","Product","Weight","Name","Email","Address","City","State","Zip","Tracking"
+{% for order in orders %}
+{{ csv_escape(order.getModifiedAt().format('m-d-Y'))|raw }},{{ csv_escape(order.getModifiedAtTimestamp())|raw }},{{ csv_escape(order.getProduct().getName())|raw }},{{ csv_escape(order.getProduct().getWeight() ~ ' ' ~ order.getProduct().getWeightMeasure())|raw }},{{ csv_escape(order.getCustomer().getFirstName() ~ ' ' ~ order.getCustomer().getLastName())|raw }},{{ csv_escape(order.getCustomer().getEmail())|raw }},{{ csv_escape(order.getCustomerShippingAddress().getStreetAddress())|raw }},{{ csv_escape(order.getCustomerShippingAddress().getCity())|raw }},{{ csv_escape(order.getCustomerShippingAddress().getState())|raw }},{{ csv_escape(order.getCustomerShippingAddress().getZipCode())|raw }},{{ csv_escape(order.getTrackingNumber())|raw }}
+{% endfor %}

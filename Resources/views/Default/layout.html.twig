@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}IMA{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ asset('css/semantic.css') }}">
+   	<link rel="stylesheet" type="text/css" href="{{ asset('css/icon.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/zeeto.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/zeeto.mobile.css') }}">
+</head>
+
+<body fullbleed vertical layout>
+    {% block body %}{% endblock %}
+
+    <!-- javascripts -->
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('js/semantic.js') }}"></script>
+    <script src="{{ asset('js/zeeto.js') }}"></script>
+</body>

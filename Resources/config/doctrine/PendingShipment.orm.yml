@@ -1,0 +1,153 @@
+BackOfficeBundle\Entity\PendingShipment:
+    type: entity
+    table: view_pending_shipments
+    indexes:
+        shipment_product_id_fk:
+            columns:
+                - product_id
+        shipment_customer_id_fk:
+            columns:
+                - customer_id
+        shipment_customer_shipping_address_id_fk:
+            columns:
+                - customer_shipping_address_id
+        shipment_status_id_fk:
+            columns:
+                - shipment_status_id
+        shipment_carrier_id_fk:
+            columns:
+                - carrier_id
+        shipment_user_id_fk:
+            columns:
+                - modified_by
+        shipment_token_id_fk:
+            columns:
+                - token_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        tokenId:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+            column: token_id
+        stampStatusId:
+            type: smallint
+            nullable: false
+            options:
+                unsigned: false
+                default: '1'
+            column: stamp_status_id
+        trackingNumber:
+            type: string
+            nullable: true
+            length: 35
+            options:
+                fixed: false
+            column: tracking_number
+        trackingStamp:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracking_stamp
+        shippedAt:
+            type: datetime
+            nullable: true
+            column: shipped_at
+        active:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+                default: '1'
+        modifiedAt:
+            type: datetime
+            nullable: false
+            column: modified_at
+        modifiedAtTimestamp:
+            type: integer
+            nullable: false
+            column: modified_at_timestamp
+    manyToOne:
+        carrier:
+            targetEntity: Carrier
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                carrier_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        customer:
+            targetEntity: Customer
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                customer_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        customerShippingAddress:
+            targetEntity: CustomerShippingAddress
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                customer_shipping_address_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        product:
+            targetEntity: Product
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                product_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        shipmentStatus:
+            targetEntity: ShipmentStatus
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                shipment_status_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        token:
+            targetEntity: Token
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                TOKEN_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modifiedBy:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modified_by:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

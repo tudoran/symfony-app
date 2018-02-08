@@ -1,0 +1,147 @@
+{% extends 'BackOfficeBundle:Default:dashboard_layout.html.twig' %}
+{% block title %}IMA Login{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumbs clearfix">
+        <li><a href="{{ path('back_office_products') }}">Create New</a></li>
+        <li>All Products</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    <div class="inside">
+        <div class="ui cards">
+            <div class="fw card">
+                <div class="content">
+
+                    <!-- Errors from controller attempting to save data -->
+                    {% if app.request.get('_status') == 500 %}
+                        <div class="ui error message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                Please review the following error(s):
+                            </div>
+                            <ul class="list">
+                                <li>An error has occurred while attempting to update our records.</li>
+                                {% if app.request.get('error') == 'missing_data' %}
+                                    <li>Products to archive has not been found.</li>
+                                    <li>Please select at least one and try again.</li>
+                                {% else %}
+                                    <li>{{ app.request.get('error') }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Success from controller attempting to save data -->
+                    {% if app.request.get('_status') == 200 %}
+                        <div class="ui success message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                Success
+                            </div>
+                            <ul class="list">
+                                <li>Product information has been successfully saved.</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <!-- End of success message from controller -->
+
+                    <div class="ui segment">
+                        <h2 class="ui header">
+                            <i class="money icon"></i>
+                            <div class="content">
+                                Products
+                                <div class="sub header">Search Products</div>
+                            </div>
+                        </h2>
+                    </div>
+
+                    <div class="ui segment">
+
+                        <table class="datatable" width="100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th><input type="checkbox" id="select-all"/></th>
+                                    <th>Name</th>
+                                    <th>Vendor</th>
+                                    <th>Posts</th>
+                                    <th>Link</th>
+                                    <th>Weight</th>
+                                    <th>Total </th>
+                                    <th>Threshold</th>
+                                    <th>Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in products() %}
+                            <tr>
+                                <td>
+                                    <a class="link show-popup"  data-variation="inverted" data-content="Click to edit {{ product.getName() }}..." href="{{ path('back_office_products_show', {id: product.getId()}) }}">
+                                        <i class="edit icon"></i>
+                                    </a>
+                                </td>
+                                <td>{{ product.getId() }}</td>
+                                <td>
+                                    <a target="_blank" href="{{ path('back_office_products_show', {'id' : product.getId() }) }}">
+                                        {{ product.getName() }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="{{ path('back_office_vendors_show', {'id' : product.getVendor().getId() }) }}">
+                                        {{ product.getVendor().getName() }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="{{ path('back_office_product_posts', {'id' : product.getId() }) }}">
+                                        {{ posts(product.getId()) | length() | default('')}}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="{{ product.getVendorLink() | default('')}}">{{ product.getVendorLink() | default('') }}</a>
+                                </td>
+                                <td>{{ product.getWeight() ~ ' '  ~ product.getWeightMeasure()| default('')}}</td>
+                                <td>
+                                    {% if product.getThreshold() >= product.getTotal()  %}
+                                        {{ product.getTotal() }}
+                                        <br/>
+                                        <div style="color:red"><small>&nbsp;&nbsp;**product threshold has been reached</small></div>
+                                    {% else %}
+                                        <div >{{ product.getTotal() }}</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if product.getThreshold() >= product.getTotal()  %}
+                                        <div style="color:red">
+                                            <div>{{ product.getThreshold() }}</div>
+
+                                        </div>
+                                        {% else %}
+                                        {{ product.getThreshold() | default('')}}
+                                    {% endif %}
+                                </td>
+                                <td>{{ product.getModifiedAt().format('m-d-Y') | default('')}}</td>
+                            </tr>
+                        {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end content -->
+
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end cards -->
+
+    </div>
+    <!-- end inside -->
+
+    <!-- archive form -->
+    <form id="_archive" name="_archive" action="{{ path('back_office_products_delete') }}" method="post">
+        <input type="hidden" id="_archive_selected_elements" name="_archive_selected_elements" value="">
+    </form>
+    <!-- end archive form -->
+{% endblock %}
